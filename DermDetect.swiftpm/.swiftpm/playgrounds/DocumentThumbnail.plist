@@ -1,3 +1,19 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:90000e8e494f9e7090cb651d6aa7a0d54425532db588e9cd4cce865fb451af28
-size 481
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>DocumentThumbnailConfiguration</key>
+	<dict>
+		<key>accentColorHash</key>
+		<data>
+		Zi6GXCVwAjoHBVWpA//UYGRzYeKC0F2s2qkUPox07cs=
+		</data>
+		<key>appIconHash</key>
+		<data>
+		OTxJB9IRDAOqZz9XUa56fT9uojTJYWAwk2oIeESPenk=
+		</data>
+		<key>thumbnailIsPrerendered</key>
+		<false/>
+	</dict>
+</dict>
+</plist>

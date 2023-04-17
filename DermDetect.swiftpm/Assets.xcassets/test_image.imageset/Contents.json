@@ -1,3 +1,12 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b5c8731fe17dd9dde63ccdae11d010b0286008666090ae85c705a8b87ffc9cfb
-size 191
+{
+  "images" : [
+    {
+      "filename" : "mel-is10-ec578b15c26e426d86a6f8171a61227a.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

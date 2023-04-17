@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e0d621382b596d05c43471d34fbd9e55649fcfd8b78f80d4532188a175911862
-size 350
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppSettings</key>
+	<dict>
+		<key>appIconPlaceholderGlyphName</key>
+		<string>cloud</string>
+		<key>appSettingsVersion</key>
+		<integer>1</integer>
+	</dict>
+</dict>
+</plist>

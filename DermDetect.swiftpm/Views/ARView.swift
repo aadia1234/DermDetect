@@ -1,3 +1,38 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0140a0d7172e63d0a625ef0929aea26980587d879f88fc4811c0590b3410ca4a
-size 1265
+//
+//  ARView.swift
+//  DermDetect
+//
+//  Created by Aadi Anand on 4/6/23.
+//
+
+import SwiftUI
+import ARKit
+import RealityKit
+
+struct ARViewContainer: UIViewRepresentable {
+    @State private var arView = ARView(frame: .zero)
+    @State private var coachingOverlay = ARCoachingOverlayView(frame: .zero)
+    
+    // Setups AR view and coaching view
+    func makeUIView(context: Context) -> some ARView {
+        arView.automaticallyConfigureSession = true
+        coachingOverlay.activatesAutomatically = true
+        arView.addSubview(coachingOverlay)
+        coachingOverlay.goal = .horizontalPlane
+        coachingOverlay.session = arView.session        
+        coachingOverlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return arView
+    }
+    
+    //Creates AR model of a disease and display it
+    public func createModel(_ entityType: DiseaseModels) {
+        let anchor = try! DiseaseModels.load(entityType)
+        let model = anchor.findEntity(named: "\(entityType.rawValue.lowercased()) model") as! Entity & HasCollision
+        
+        arView.scene.anchors.removeAll()
+        arView.installGestures(.all, for: model)
+        arView.scene.addAnchor(anchor)
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {}
+}
