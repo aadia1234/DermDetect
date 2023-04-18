@@ -9,7 +9,8 @@ import SwiftUI
 
 struct WelcomeView: View {
     @State private var photo = UIImage()
-    @State private var showAlert = false
+    @State private var showDisclaimer = false
+    @State private var showInfoAlert = false
     @State private var showPhotoPicker = false
     @State private var showSourceDialog = false
     @State private var photoSource = UIImagePickerController.SourceType.camera
@@ -28,7 +29,7 @@ struct WelcomeView: View {
                 .padding(.bottom, 80)
             
             Button("Scan Your Skin!") {
-                showAlert.toggle()
+                showDisclaimer.toggle()
             }
             .font(.title)
             
@@ -46,10 +47,27 @@ struct WelcomeView: View {
         .onChange(of: photo, perform: { _ in showResults.toggle()})
         .navigationDestination(isPresented: $showResults, destination: { ResultsView(image: photo) })
         .fullScreenCover(isPresented: $showPhotoPicker) { ImagePicker(selectedImage: $photo, sourceType: photoSource).edgesIgnoringSafeArea(.all) }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showInfoAlert.toggle()
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                }
+
+            }
+        }
+        //Important info about building and running this app
+        .alert("Important Info!", isPresented: $showInfoAlert, actions: {
+            Button("Continue", role: .cancel) { showInfoAlert.toggle() }
+        }, message: {
+            Text("Please build this app with Xcode 14 on macOS 13, and run it on an iPad with iPadOS 16")
+        })
+        
         //Important disclaimer to let users know the app is a prototype and is not meant to be used as a substitute for a consultation with a doctor
-        .alert("Disclaimer!", isPresented: $showAlert, actions: {
+        .alert("Disclaimer!", isPresented: $showDisclaimer, actions: {
             Button("Continue", role: .cancel) {
-                showAlert.toggle()
+                showDisclaimer.toggle()
                 showSourceDialog.toggle()
             }
         }, message: {

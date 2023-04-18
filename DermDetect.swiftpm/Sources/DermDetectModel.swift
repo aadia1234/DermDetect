@@ -6,65 +6,69 @@
 
 import CoreML
 
-// <= v5: REPLACE input_1 with resnet50_input
-
 
 /// Model Prediction Input Type
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.14, iOS 12.0, tvOS 12.0, *)
+@available(watchOS, unavailable)
 class DermDetectModelInput : MLFeatureProvider {
 
-    /// input_1 as color (kCVPixelFormatType_32BGRA) image buffer, 224 pixels wide by 224 pixels high
-    var input_1: CVPixelBuffer
+    /// Input image to be classified as color (kCVPixelFormatType_32BGRA) image buffer, 299 pixels wide by 299 pixels high
+    var image: CVPixelBuffer
 
     var featureNames: Set<String> {
         get {
-            return ["input_1"]
+            return ["image"]
         }
     }
     
     func featureValue(for featureName: String) -> MLFeatureValue? {
-        if (featureName == "input_1") {
-            return MLFeatureValue(pixelBuffer: input_1)
+        if (featureName == "image") {
+            return MLFeatureValue(pixelBuffer: image)
         }
         return nil
     }
     
-    init(input_1: CVPixelBuffer) {
-        self.input_1 = input_1
+    init(image: CVPixelBuffer) {
+        self.image = image
     }
 
-    convenience init(input_1With input_1: CGImage) throws {
-        self.init(input_1: try MLFeatureValue(cgImage: input_1, pixelsWide: 224, pixelsHigh: 224, pixelFormatType: kCVPixelFormatType_32ARGB, options: nil).imageBufferValue!)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    convenience init(imageWith image: CGImage) throws {
+        self.init(image: try MLFeatureValue(cgImage: image, pixelsWide: 299, pixelsHigh: 299, pixelFormatType: kCVPixelFormatType_32BGRA, options: nil).imageBufferValue!)
     }
 
-    convenience init(input_1At input_1: URL) throws {
-        self.init(input_1: try MLFeatureValue(imageAt: input_1, pixelsWide: 224, pixelsHigh: 224, pixelFormatType: kCVPixelFormatType_32ARGB, options: nil).imageBufferValue!)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    convenience init(imageAt image: URL) throws {
+        self.init(image: try MLFeatureValue(imageAt: image, pixelsWide: 299, pixelsHigh: 299, pixelFormatType: kCVPixelFormatType_32BGRA, options: nil).imageBufferValue!)
     }
 
-    func setInput_1(with input_1: CGImage) throws  {
-        self.input_1 = try MLFeatureValue(cgImage: input_1, pixelsWide: 224, pixelsHigh: 224, pixelFormatType: kCVPixelFormatType_32ARGB, options: nil).imageBufferValue!
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func setImage(with image: CGImage) throws  {
+        self.image = try MLFeatureValue(cgImage: image, pixelsWide: 299, pixelsHigh: 299, pixelFormatType: kCVPixelFormatType_32BGRA, options: nil).imageBufferValue!
     }
 
-    func setInput_1(with input_1: URL) throws  {
-        self.input_1 = try MLFeatureValue(imageAt: input_1, pixelsWide: 224, pixelsHigh: 224, pixelFormatType: kCVPixelFormatType_32ARGB, options: nil).imageBufferValue!
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func setImage(with image: URL) throws  {
+        self.image = try MLFeatureValue(imageAt: image, pixelsWide: 299, pixelsHigh: 299, pixelFormatType: kCVPixelFormatType_32BGRA, options: nil).imageBufferValue!
     }
 
 }
 
 
 /// Model Prediction Output Type
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.14, iOS 12.0, tvOS 12.0, *)
+@available(watchOS, unavailable)
 class DermDetectModelOutput : MLFeatureProvider {
 
     /// Source provided by CoreML
     private let provider : MLFeatureProvider
 
-    /// Identity as dictionary of strings to doubles
-    var Identity: [String : Double] {
-        return self.provider.featureValue(for: "Identity")!.dictionaryValue as! [String : Double]
+    /// Probability of each category as dictionary of strings to doubles
+    var classLabelProbs: [String : Double] {
+        return self.provider.featureValue(for: "classLabelProbs")!.dictionaryValue as! [String : Double]
     }
 
-    /// classLabel as string value
+    /// Most likely image category as string value
     var classLabel: String {
         return self.provider.featureValue(for: "classLabel")!.stringValue
     }
@@ -77,8 +81,8 @@ class DermDetectModelOutput : MLFeatureProvider {
         return self.provider.featureValue(for: featureName)
     }
 
-    init(Identity: [String : Double], classLabel: String) {
-        self.provider = try! MLDictionaryFeatureProvider(dictionary: ["Identity" : MLFeatureValue(dictionary: Identity as [AnyHashable : NSNumber]), "classLabel" : MLFeatureValue(string: classLabel)])
+    init(classLabelProbs: [String : Double], classLabel: String) {
+        self.provider = try! MLDictionaryFeatureProvider(dictionary: ["classLabelProbs" : MLFeatureValue(dictionary: classLabelProbs as [AnyHashable : NSNumber]), "classLabel" : MLFeatureValue(string: classLabel)])
     }
 
     init(features: MLFeatureProvider) {
@@ -88,14 +92,15 @@ class DermDetectModelOutput : MLFeatureProvider {
 
 
 /// Class for model loading and prediction
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.14, iOS 12.0, tvOS 12.0, *)
+@available(watchOS, unavailable)
 class DermDetectModel {
     let model: MLModel
 
     /// URL of model assuming it was installed in the same bundle as this class
     class var urlOfModelInThisBundle : URL {
-        let path = Bundle.main.url(forResource: "DermDetectModel", withExtension: "mlmodelc")!
-        return path
+        let bundle = Bundle(for: self)
+        return bundle.url(forResource: "DermDetectModel", withExtension:"mlmodelc")!
     }
 
     /**
@@ -238,7 +243,7 @@ class DermDetectModel {
 
         - parameters:
            - input: the input to the prediction as DermDetectModelInput
-           - options: prediction options 
+           - options: prediction options
 
         - throws: an NSError object that describes the problem
 
@@ -253,14 +258,14 @@ class DermDetectModel {
         Make a prediction using the convenience interface
 
         - parameters:
-            - input_1 as color (kCVPixelFormatType_32BGRA) image buffer, 224 pixels wide by 224 pixels high
+            - image: Input image to be classified as color (kCVPixelFormatType_32BGRA) image buffer, 299 pixels wide by 299 pixels high
 
         - throws: an NSError object that describes the problem
 
         - returns: the result of the prediction as DermDetectModelOutput
     */
-    func prediction(input_1: CVPixelBuffer) throws -> DermDetectModelOutput {
-        let input_ = DermDetectModelInput(input_1: input_1)
+    func prediction(image: CVPixelBuffer) throws -> DermDetectModelOutput {
+        let input_ = DermDetectModelInput(image: image)
         return try self.prediction(input: input_)
     }
 
@@ -269,7 +274,7 @@ class DermDetectModel {
 
         - parameters:
            - inputs: the inputs to the prediction as [DermDetectModelInput]
-           - options: prediction options 
+           - options: prediction options
 
         - throws: an NSError object that describes the problem
 

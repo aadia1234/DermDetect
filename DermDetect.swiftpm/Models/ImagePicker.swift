@@ -1,5 +1,5 @@
 //
-//  CameraView.swift
+//  ImagePicker.swift
 //  DermDetect
 //
 //  Created by Aadi Anand on 4/8/23.

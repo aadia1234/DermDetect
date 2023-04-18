@@ -1,5 +1,5 @@
 //
-//  CardView.swift
+//  ResultsView.swift
 //  DermDetect
 //
 //  Created by Aadi Anand on 4/6/23.
