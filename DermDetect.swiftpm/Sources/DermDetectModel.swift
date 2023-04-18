@@ -99,8 +99,7 @@ class DermDetectModel {
 
     /// URL of model assuming it was installed in the same bundle as this class
     class var urlOfModelInThisBundle : URL {
-        let bundle = Bundle(for: self)
-        return bundle.url(forResource: "DermDetectModel", withExtension:"mlmodelc")!
+        return Bundle.main.url(forResource: "DermDetectModel", withExtension:"mlmodel")!
     }
 
     /**
@@ -144,7 +143,8 @@ class DermDetectModel {
         - throws: an NSError object that describes the problem
     */
     convenience init(contentsOf modelURL: URL) throws {
-        try self.init(model: MLModel(contentsOf: modelURL))
+        let compiledURL = try! MLModel.compileModel(at: modelURL)
+        try self.init(model: MLModel(contentsOf: compiledURL))
     }
 
     /**
@@ -157,7 +157,8 @@ class DermDetectModel {
         - throws: an NSError object that describes the problem
     */
     convenience init(contentsOf modelURL: URL, configuration: MLModelConfiguration) throws {
-        try self.init(model: MLModel(contentsOf: modelURL, configuration: configuration))
+        let compiledURL = try! MLModel.compileModel(at: modelURL)
+        try self.init(model: MLModel(contentsOf: compiledURL, configuration: configuration))
     }
 
     /**

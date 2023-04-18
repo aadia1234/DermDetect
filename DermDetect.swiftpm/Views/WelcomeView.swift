@@ -13,8 +13,8 @@ struct WelcomeView: View {
     @State private var showInfoAlert = false
     @State private var showPhotoPicker = false
     @State private var showSourceDialog = false
-    @State private var photoSource = UIImagePickerController.SourceType.camera
     @State private var showResults = false
+    @State private var photoSource = UIImagePickerController.SourceType.camera
     
     var body: some View {
         VStack {
@@ -61,7 +61,7 @@ struct WelcomeView: View {
         .alert("Important Info!", isPresented: $showInfoAlert, actions: {
             Button("Continue", role: .cancel) { showInfoAlert.toggle() }
         }, message: {
-            Text("Please build this app with Xcode 14 on macOS 13, and run it on an iPad with iPadOS 16")
+            Text("Please build and run this app on Swift Playgrounds on an iPad with iPadOS 16")
         })
         
         //Important disclaimer to let users know the app is a prototype and is not meant to be used as a substitute for a consultation with a doctor
